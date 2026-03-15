@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-locked">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Tanusha Katepalli - Software Engineer with 4+ years building scalable cloud-native applications. Full-Stack · React · Angular · Java · Go · AWS">
   <meta name="author" content="Tanusha Katepalli">
   <title>Tanusha Katepalli | Software Engineer</title>
@@ -83,15 +83,33 @@
       <div class="ai-chat-panel" id="aiChatPanel">
         <div class="ai-chat-header">
           <span class="skill-badge">Ask About Tanusha</span>
+          <button type="button" class="ai-chat-back-btn" id="aiChatBackBtn" hidden aria-label="Show upload and intro">Paste another job</button>
         </div>
         <div class="ai-chat-intro">
-          Hi! I'm here to answer questions about <strong>Tanusha</strong> - her experience at Viant & Amazon AWS, skills, projects, education, and how to get in touch. Try: "What are her skills?" or "Tell me about her work."
+          <p class="ai-chat-intro-line">Help HR & recruiters evaluate Tanusha.</p>
+          <p class="ai-chat-intro-line">Upload or paste a job description for a match summary, or ask about her skills and experience.</p>
         </div>
         <div class="ai-chat-quicklinks">
           <a href="#experience">Work</a>
-          <a href="#about-content">About me</a>
+          <a href="#about-content">About</a>
           <a href="#skills">Skills</a>
           <a href="#contact">Contact</a>
+        </div>
+        <div class="ai-chat-upload" id="aiChatUpload">
+          <button type="button" class="ai-chat-upload-toggle" id="aiChatUploadToggle" aria-expanded="false">
+            <span class="ai-chat-upload-icon">📄</span>
+            <span>Upload or paste job description</span>
+            <span class="ai-chat-upload-chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="ai-chat-upload-panel" id="aiChatUploadPanel" hidden>
+            <div class="ai-chat-upload-zone" id="aiChatUploadZone">
+              <input type="file" id="aiChatFileInput" accept=".txt,.pdf,.docx" aria-label="Upload job description file">
+              <span class="ai-chat-upload-hint">Drop file here or click to upload (.txt, .pdf, .docx)</span>
+            </div>
+            <div class="ai-chat-upload-divider">or paste below</div>
+            <textarea class="ai-chat-upload-paste" id="aiChatUploadPaste" placeholder="Paste job description here..." rows="2"></textarea>
+            <button type="button" class="ai-chat-upload-analyze" id="aiChatUploadAnalyze">Analyze match</button>
+          </div>
         </div>
         <div class="ai-chat-messages" id="aiChatMessages"></div>
         <div class="ai-chat-typing" id="aiChatTyping">
@@ -456,12 +474,14 @@
     </section>
 
     <footer class="site-footer">
-      <p>© 2026 Tanusha Katepalli · Built with HTML, CSS & JavaScript</p>
+      <p>© 2026 Tanusha Katepalli · Crafted with passion for turning ideas into reality</p>
     </footer>
     </div>
     <!-- end scroll-reveal-content -->
   </div>
   <script src="resume.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <script src="main.js"></script>
 
 </body>
