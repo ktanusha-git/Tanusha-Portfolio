@@ -593,7 +593,6 @@
               reject(new Error('PDF library not loaded'));
               return;
             }
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
             var r = new FileReader();
             r.onload = function() {
               var arr = new Uint8Array(r.result);
@@ -736,8 +735,8 @@
         }
       }
 
+      var isProcessingFile = false;
       if (uploadZone && fileInput) {
-        uploadZone.addEventListener('click', function() { fileInput.click(); });
         uploadZone.addEventListener('dragover', function(e) {
           e.preventDefault();
           uploadZone.classList.add('dragover');
@@ -751,25 +750,51 @@
         });
         fileInput.addEventListener('change', function() {
           var f = fileInput.files && fileInput.files[0];
-          if (f) handleFile(f);
           fileInput.value = '';
+          if (f && !isProcessingFile) handleFile(f);
         });
       }
 
       function handleFile(file) {
+        if (isProcessingFile) return;
         var ext = (file.name || '').split('.').pop().toLowerCase();
         if (['txt', 'pdf', 'docx'].indexOf(ext) === -1) {
           addMsg(true, 'Uploaded ' + file.name);
           addMatchMsg('Tanusha', 'Please upload .txt, .pdf, or .docx only.', '');
           return;
         }
+        isProcessingFile = true;
+        addMsg(true, 'Uploaded ' + file.name);
         extractTextFromFile(file).then(function(text) {
           pasteArea.value = text;
-          runAnalyze(text, 'Uploaded ' + file.name);
+          runAnalyze(text, null);
         }).catch(function(err) {
-          addMsg(true, 'Uploaded ' + file.name);
-          addMatchMsg('Error', escapeHtml(err.message || 'Could not read file'), 'msg-match-weak');
+          addMatchMsg('Tanusha', 'Could not read file: ' + (err.message || 'Unknown error') + '. Try pasting the text instead, or use a .txt file.', 'msg-match-weak');
+        }).finally(function() {
+          isProcessingFile = false;
         });
+      }
+
+      var clearBtn = document.getElementById('aiChatClearBtn');
+      function clearChatAndReset() {
+        messagesEl.innerHTML = '';
+        messagesEl.classList.remove('active');
+        if (pasteArea) pasteArea.value = '';
+        if (fileInput) fileInput.value = '';
+        if (chatPanel) {
+          chatPanel.classList.remove('chat-focused', 'chat-result');
+          chatPanel.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (uploadToggle && uploadPanel) {
+          uploadPanel.hidden = true;
+          uploadToggle.setAttribute('aria-expanded', 'false');
+        }
+        if (backBtn) backBtn.hidden = true;
+        lastBotScrollTo = null;
+        lastBotSectionName = null;
+      }
+      if (clearBtn) {
+        clearBtn.addEventListener('click', clearChatAndReset);
       }
 
       if (backBtn && chatPanel) {
